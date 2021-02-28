@@ -1,0 +1,77 @@
+$margin-chair: -37.5px;
+
+.player-container {
+    overflow: auto;
+    white-space: nowrap;
+    height: 150px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    .player {
+        margin: 16px;
+        display: inline-block;
+        cursor: grab;
+        &:active {
+            cursor: grabbing !important;
+        }
+        .player-avatar {
+            height: 75px;
+        }
+    }
+}
+
+
+.game-table-container {
+    margin: 40px;
+    .game-table {
+        height: 200px;
+        width: 300px;
+        border: 2px solid black;
+        margin: 0 auto;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        .player-playing {
+            margin: 10px;
+            cursor: grab;
+            &:active {
+                cursor: grabbing !important;
+            }
+            .player-avatar {
+                height: 75px;
+            }
+        }
+        .chair {
+            height: 75px;
+            width: 75px;
+            margin: 10px;
+            border: 2px solid black;
+            display: none;
+            background-color: lightgray;
+            align-items: center;
+            justify-content: center;
+            &.chair-empty, &.player-playing {
+                display: flex;
+            }
+            &.chair-top-left {
+                margin-top: $margin-chair;
+                margin-left: $margin-chair;
+            }
+            &.chair-top-right {
+                right: 0;
+                margin-top: $margin-chair;
+                margin-right: $margin-chair;
+            }
+            &.chair-bottom-left {
+                bottom: 0;
+                margin-bottom: $margin-chair;
+                margin-left: $margin-chair;
+            }
+            &.chair-bottom-right {
+                bottom: 0;
+                right: 0;
+                margin-bottom: $margin-chair;
+                margin-right: $margin-chair;
+            }
+        }
+    }
+}

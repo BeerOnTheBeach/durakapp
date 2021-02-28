@@ -36,11 +36,11 @@ if($num>0){
 
         $game_item=array(
             "id" => $id,
-            "name" => $name,
             "loser" => $loser,
             "loser_2" => $loser_2,
             "players" => $players,
             "session_id" => $session_id,
+            "modified" => $modified,
         );
 
         array_push($game_arr["records"], $game_item);
