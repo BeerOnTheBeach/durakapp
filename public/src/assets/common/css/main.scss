@@ -3,15 +3,16 @@ $margin-chair: -37.5px;
 .player-container {
     overflow: auto;
     white-space: nowrap;
-    height: 150px;
+    height: 135px;
     border-top: 2px solid black;
     border-bottom: 2px solid black;
     .player {
         margin: 16px;
         display: inline-block;
         cursor: grab;
-        &:active {
-            cursor: grabbing !important;
+        &.currentlyPlaying {
+            opacity: 0.5;
+            cursor: default;
         }
         .player-avatar {
             height: 75px;
@@ -21,15 +22,17 @@ $margin-chair: -37.5px;
 
 
 .game-table-container {
-    margin: 40px;
+    margin: 40px auto 40px auto;
+    width: 300px;
     .game-table {
-        height: 200px;
+        height: 240px;
         width: 300px;
         border: 2px solid black;
         margin: 0 auto;
         position: relative;
         display: flex;
         flex-wrap: wrap;
+        border-radius: 16px;
         .player-playing {
             margin: 10px;
             cursor: grab;
@@ -49,6 +52,7 @@ $margin-chair: -37.5px;
             background-color: lightgray;
             align-items: center;
             justify-content: center;
+            position: absolute;
             &.chair-empty, &.player-playing {
                 display: flex;
             }

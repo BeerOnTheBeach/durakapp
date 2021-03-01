@@ -9,7 +9,6 @@ class Game
 
     // object properties
     public $id;
-    public $name;
     public $loser;
     public $loser_2;
     public $players;
@@ -46,13 +45,12 @@ class Game
         $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                name=:name, loser=:loser, loser_2=:loser_2, players=:players, session_id:session_id created=:created";
+                loser=:loser, loser_2=:loser_2, players=:players, session_id=:session_id, created=:created";
 
         // prepare query
         $stmt = $this->conn->prepare($query);
 
         // sanitize
-        $this->name = htmlspecialchars(strip_tags($this->name));
         $this->loser = htmlspecialchars(strip_tags($this->loser));
         $this->loser_2 = htmlspecialchars(strip_tags($this->loser_2));
         $this->players = htmlspecialchars(strip_tags($this->players));
@@ -60,7 +58,6 @@ class Game
         $this->created = htmlspecialchars(strip_tags($this->created));
 
         // bind values
-        $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":loser", $this->loser);
         $stmt->bindParam(":loser_2", $this->loser_2);
         $stmt->bindParam(":players", $this->players);

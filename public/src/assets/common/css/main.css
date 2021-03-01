@@ -1,7 +1,7 @@
 .player-container {
   overflow: auto;
   white-space: nowrap;
-  height: 150px;
+  height: 135px;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
 }
@@ -10,24 +10,27 @@
   display: inline-block;
   cursor: grab;
 }
-.player-container .player:active {
-  cursor: grabbing !important;
+.player-container .player.currentlyPlaying {
+  opacity: 0.5;
+  cursor: default;
 }
 .player-container .player .player-avatar {
   height: 75px;
 }
 
 .game-table-container {
-  margin: 40px;
+  margin: 40px auto 40px auto;
+  width: 300px;
 }
 .game-table-container .game-table {
-  height: 200px;
+  height: 240px;
   width: 300px;
   border: 2px solid black;
   margin: 0 auto;
   position: relative;
   display: flex;
   flex-wrap: wrap;
+  border-radius: 16px;
 }
 .game-table-container .game-table .player-playing {
   margin: 10px;
@@ -48,6 +51,7 @@
   background-color: lightgray;
   align-items: center;
   justify-content: center;
+  position: absolute;
 }
 .game-table-container .game-table .chair.chair-empty, .game-table-container .game-table .chair.player-playing {
   display: flex;

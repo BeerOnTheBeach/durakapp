@@ -13,6 +13,7 @@ class Player
     public $losses;
     public $draws;
     public $color;
+    public $currentlyPlaying;
     public $created;
 
     // constructor with $db as database connection
@@ -45,7 +46,7 @@ class Player
         $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                name=:name, losses=:losses, draws=:draws, color=:color, created=:created";
+                name=:name, losses=:losses, draws=:draws, color=:color, currentlyPlaying=:currentlyPlaying, created=:created";
 
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -55,6 +56,7 @@ class Player
         $this->losses = htmlspecialchars(strip_tags($this->losses));
         $this->draws = htmlspecialchars(strip_tags($this->draws));
         $this->color = htmlspecialchars(strip_tags($this->color));
+        $this->currentlyPlaying = htmlspecialchars(strip_tags($this->currentlyPlaying));
         $this->created = htmlspecialchars(strip_tags($this->created));
 
         // bind values
@@ -62,6 +64,7 @@ class Player
         $stmt->bindParam(":price", $this->losses);
         $stmt->bindParam(":description", $this->draws);
         $stmt->bindParam(":category_id", $this->color);
+        $stmt->bindParam(":currentlyPlaying", $this->currentlyPlaying);
         $stmt->bindParam(":created", $this->created);
 
         // execute query
@@ -101,6 +104,8 @@ class Player
         $this->losses = $row['losses'];
         $this->draws = $row['draws'];
         $this->color = $row['color'];
+        $this->currentlyPlaying = $row['currentlyPlaying'];
+        $this->created = $row['created'];
     }
 
     // update the product
@@ -114,6 +119,7 @@ class Player
                 losses = :losses,
                 draws = :draws,
                 color = :color
+                currentlyPlaying = :currentlyPlaying
             WHERE
                 id = :id";
 
@@ -121,17 +127,19 @@ class Player
         $stmt = $this->conn->prepare($query);
 
         // sanitize
+        $this->id=htmlspecialchars(strip_tags($this->id));
         $this->name=htmlspecialchars(strip_tags($this->name));
         $this->losses=htmlspecialchars(strip_tags($this->losses));
         $this->draws=htmlspecialchars(strip_tags($this->draws));
         $this->color=htmlspecialchars(strip_tags($this->color));
-        $this->id=htmlspecialchars(strip_tags($this->id));
+        $this->currentlyPlaying = htmlspecialchars(strip_tags($this->currentlyPlaying));
 
         // bind new values
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':losses', $this->losses);
         $stmt->bindParam(':draws', $this->draws);
         $stmt->bindParam(':color', $this->color);
+        $stmt->bindParam(':currentlyPlaying', $this->currentlyPlaying);
         $stmt->bindParam(':id', $this->id);
 
         // execute the query

@@ -22,7 +22,6 @@ $data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
 if(
-    !empty($data->name) &&
     !empty($data->loser) &&
     !empty($data->loser_2) &&
     !empty($data->players) &&
@@ -30,10 +29,10 @@ if(
 ){
 
     // set product property values
-    $game->name = $data->name;
     $game->loser = $data->loser;
     $game->loser_2 = $data->loser_2;
-    $game->players = $data->session_id;
+    $game->players = $data->players;
+    $game->session_id = $data->session_id;
     $game->created = date('Y-m-d H:i:s');
 
     // create the product

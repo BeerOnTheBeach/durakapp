@@ -40,7 +40,7 @@ if($num>0){
             "losses" => $losses,
             "draws" => $draws,
             "color" => $color,
-            "currentlyPlaying" => $currentlyPlaying,
+            "currentlyPlaying" => boolval($currentlyPlaying),
         );
 
         array_push($player_arr["records"], $player_item);
