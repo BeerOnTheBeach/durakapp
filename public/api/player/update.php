@@ -25,9 +25,10 @@ $player->id = $data->id;
 
 // set product property values
 $player->name = $data->name;
-$player->loser = $data->losses;
-$player->loser_2 = $data->draws;
-$player->players = $data->color;
+$player->losses = $data->losses;
+$player->draws = $data->draws;
+$player->color = $data->color;
+$player->currentlyPlaying = $data->currentlyPlaying;
 
 // update the product
 if($player->update()){

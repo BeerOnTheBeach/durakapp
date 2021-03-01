@@ -15,16 +15,16 @@ $database = new Database();
 $db = $database->getConnection();
 
 // prepare product object
-$player = new Player($db);
+$game = new Game($db);
 
 // get product id
 $data = json_decode(file_get_contents("php://input"));
 
 // set product id to be deleted
-$player->id = $data->id;
+$game->id = $data->id;
 
 // delete the product
-if($player->delete()){
+if($game->delete()){
 
     // set response code - 200 ok
     http_response_code(200);

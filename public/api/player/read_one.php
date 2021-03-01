@@ -28,9 +28,10 @@ if($player->name!=null){
     $player_arr = array(
         "id" =>  $player->id,
         "name" => $player->name,
-        "losses" => $player->loser,
-        "draws" => $player->loser_2,
-        "color" => $player->players
+        "losses" => $player->losses,
+        "draws" => $player->draws,
+        "color" => $player->color,
+        "currentlyPlaying" => $player->currentlyPlaying,
     );
 
     // set response code - 200 OK

@@ -97,7 +97,6 @@ class Game
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set values to object properties
-        $this->name = $row['name'];
         $this->loser = $row['loser'];
         $this->loser_2 = $row['loser_2'];
         $this->players = $row['players'];
@@ -111,7 +110,6 @@ class Game
         $query = "UPDATE
                 " . $this->table_name . "
             SET
-                name = :name,
                 loser = :loser,
                 loser_2 = :loser_2,
                 players = :players,
@@ -123,18 +121,16 @@ class Game
         $stmt = $this->conn->prepare($query);
 
         // sanitize
-        $this->name=htmlspecialchars(strip_tags($this->name));
         $this->loser=htmlspecialchars(strip_tags($this->loser));
         $this->loser_2=htmlspecialchars(strip_tags($this->loser_2));
         $this->players=htmlspecialchars(strip_tags($this->players));
         $this->id=htmlspecialchars(strip_tags($this->id));
 
         // bind new values
-        $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':losses', $this->loser);
-        $stmt->bindParam(':draws', $this->loser_2);
-        $stmt->bindParam(':color', $this->players);
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':loser_2', $this->loser_2);
+        $stmt->bindParam(':players', $this->players);
+        $stmt->bindParam(':session_id', $this->id);
 
         // execute the query
         if($stmt->execute()){

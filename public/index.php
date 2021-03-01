@@ -19,7 +19,8 @@
     <div class="player-container" @drop="onDrop($event, false)" @dragover.prevent @dragenter.prevent>
         <template v-for="player in playersIdle">
             <div @dragstart='startDrag($event, player)' @dragover.prevent @dragenter.prevent
-                 :draggable="!player.currentlyPlaying" :class="player.currentlyPlaying ? currentlyPlayingClass : ''" class="player">
+                 :draggable="!player.currentlyPlaying" :class="player.currentlyPlaying ? currentlyPlayingClass : ''"
+                 class="player">
                 <img draggable="false" src="/src/assets/common/avatars/default.svg"
                      class="rounded-circle player-avatar">
                 <div class="caption text-center">{{player.name}}</div>
@@ -30,13 +31,44 @@
         <h1 class="text-center">Spielertisch</h1>
         <div @dragover.prevent @dragenter.prevent @drop="onDrop($event, true)" class="game-table">
             <template v-for="(player, index) in playersPlaying">
-                <div @click="submitLose(player)" @dragstart='startDrag($event, player)' @dragover.prevent @dragenter.prevent
+                <div @click="submitLose(player)" @dragstart='startDrag($event, player)' @dragover.prevent
+                     @dragenter.prevent
                      draggable="true" @drop="submitDraw($event, player)" class="player player-playing">
                     <img draggable="false" src="/src/assets/common/avatars/default.svg"
                          class="rounded-circle player-avatar">
                     <div class="caption text-center">{{player.name}}</div>
             </template>
         </div>
+    </div>
+    <div class="games-container">
+        <h1 class="text-center">Spiele in dieser Session</h1>
+        <template v-for="(game, index) in gamesThisSession">
+            <div v-if="game.loser_2 === -1" class="game">
+                <div class="game-player">
+                    <img draggable="false" src="/src/assets/common/avatars/default.svg"
+                         class="rounded-circle player-avatar">
+                    <div class="game-loser-name text-center">{{game.loser}}</div>
+                </div>
+                <div class="game-timestamp text-center">
+                    {{game.modified}}
+                </div>
+            </div>
+            <div class="game game-draw" v-else>
+                <div class="game-player">
+                    <img draggable="false" src="/src/assets/common/avatars/default.svg"
+                         class="rounded-circle player-avatar">
+                    <div class="game-loser-name text-center">{{game.loser}}</div>
+                </div>
+                <div class="game-player">
+                    <img draggable="false" src="/src/assets/common/avatars/default.svg"
+                         class="rounded-circle player-avatar">
+                    <div class="game-loser-name text-center">{{game.loser_2}}</div>
+                </div>
+                <div class="game-timestamp text-center">
+                    {{game.modified}}
+                </div>
+            </div>
+        </template>
     </div>
 </div>
 

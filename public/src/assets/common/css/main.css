@@ -9,10 +9,15 @@
   margin: 16px;
   display: inline-block;
   cursor: grab;
+  border-radius: 50% 50% 5% 5%;
+}
+.player-container .player:hover {
+  background-color: #dbdbdb;
 }
 .player-container .player.currentlyPlaying {
   opacity: 0.5;
   cursor: default;
+  background-color: unset;
 }
 .player-container .player .player-avatar {
   height: 75px;
@@ -35,6 +40,11 @@
 .game-table-container .game-table .player-playing {
   margin: 10px;
   cursor: grab;
+  height: 100px;
+  border-radius: 50% 50% 5% 5%;
+}
+.game-table-container .game-table .player-playing:hover {
+  background-color: #dbdbdb;
 }
 .game-table-container .game-table .player-playing:active {
   cursor: grabbing !important;
@@ -56,25 +66,25 @@
 .game-table-container .game-table .chair.chair-empty, .game-table-container .game-table .chair.player-playing {
   display: flex;
 }
-.game-table-container .game-table .chair.chair-top-left {
-  margin-top: -37.5px;
-  margin-left: -37.5px;
+
+.games-container {
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  overflow: auto;
+  height: 210px;
 }
-.game-table-container .game-table .chair.chair-top-right {
-  right: 0;
-  margin-top: -37.5px;
-  margin-right: -37.5px;
+.games-container .game {
+  margin: 15px;
+  display: inline-block;
+  border: 2px solid;
+  padding: 4px;
 }
-.game-table-container .game-table .chair.chair-bottom-left {
-  bottom: 0;
-  margin-bottom: -37.5px;
-  margin-left: -37.5px;
+.games-container .game .game-player {
+  display: inline-block;
+  margin-right: 8px;
 }
-.game-table-container .game-table .chair.chair-bottom-right {
-  bottom: 0;
-  right: 0;
-  margin-bottom: -37.5px;
-  margin-right: -37.5px;
+.games-container .game .game-player .game-loser-name {
+  display: inline-block;
 }
 
 /*# sourceMappingURL=main.css.map */

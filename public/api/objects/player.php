@@ -110,7 +110,7 @@ class Player
 
     // update the product
     function update(){
-
+        mysqli_report(MYSQLI_REPORT_ALL);
         // update query
         $query = "UPDATE
                 " . $this->table_name . "
@@ -118,11 +118,10 @@ class Player
                 name = :name,
                 losses = :losses,
                 draws = :draws,
-                color = :color
+                color = :color,
                 currentlyPlaying = :currentlyPlaying
             WHERE
                 id = :id";
-
         // prepare query statement
         $stmt = $this->conn->prepare($query);
 
@@ -135,18 +134,18 @@ class Player
         $this->currentlyPlaying = htmlspecialchars(strip_tags($this->currentlyPlaying));
 
         // bind new values
+        $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':losses', $this->losses);
         $stmt->bindParam(':draws', $this->draws);
         $stmt->bindParam(':color', $this->color);
         $stmt->bindParam(':currentlyPlaying', $this->currentlyPlaying);
-        $stmt->bindParam(':id', $this->id);
 
         // execute the query
         if($stmt->execute()){
             return true;
         }
-
+        var_dump($stmt->errorInfo());
         return false;
     }
 
