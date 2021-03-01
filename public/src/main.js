@@ -33,7 +33,7 @@ const app = new Vue({
     },
     created() {
         //Get player-data
-        axios.get('/api/player/read.php')
+        axios.get('./api/player/read.php')
             .then(function (response) {
                 app.playersIdle = response.data.records;
                 app.playersPlaying = response.data.records.filter(
@@ -57,7 +57,7 @@ const app = new Vue({
             const player = this.playersIdle.find(player => player.id === playerID)
             if (isPlayingList && !player.currentlyPlaying) {
                 this.playersPlaying.push(player);
-                axios.post('/api/player/update.php', {
+                axios.post('./api/player/update.php', {
                     id: player.id,
                     name: player.name,
                     losses: player.losses,
@@ -74,7 +74,7 @@ const app = new Vue({
             } else if (!isPlayingList) {
                 const index = this.playersPlaying.indexOf(player);
                 if (index > -1) {
-                    axios.post('/api/player/update.php', {
+                    axios.post('./api/player/update.php', {
                         id: player.id,
                         name: player.name,
                         losses: player.losses,
@@ -114,7 +114,7 @@ const app = new Vue({
         },
         createGame(loserId, loser_2Id) {
             let players = this.getPlayersPlaying();
-            axios.post('/api/game/create.php', {
+            axios.post('./api/game/create.php', {
                 loser: loserId,
                 loser_2: loser_2Id,
                 players: players,
@@ -130,7 +130,7 @@ const app = new Vue({
         },
         getGameData() {
             //Get games-data
-            axios.get('/api/game/read.php')
+            axios.get('./api/game/read.php')
                 .then(function (response) {
                     app.games = response.data.records;
                     app.setSettings();
