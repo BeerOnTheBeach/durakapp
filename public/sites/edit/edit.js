@@ -10,6 +10,7 @@ const edit = new Vue({
             draws: '0',
             elo: '1500',
             color: '#198754',
+            gamescount: '0',
             currentlyPlaying: '0'
         },
         profile: {

@@ -48,7 +48,7 @@ class Player
         $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                name=:name, losses=:losses, draws=:draws, elo=:elo, color=:color, currentlyPlaying=:currentlyPlaying, created=:created";
+                name=:name, losses=:losses, draws=:draws, elo=:elo, color=:color, gamescount=:gamescount, currentlyPlaying=:currentlyPlaying, created=:created";
 
         // prepare query
         $stmt = $this->conn->prepare($query);
