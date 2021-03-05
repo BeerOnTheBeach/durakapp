@@ -16,9 +16,9 @@
 <body>
 
 <div id="durakapp" class="">
-    <div class="player-container" @drop="onDrop($event, false)" @dragover.prevent @dragenter.prevent>
+    <div class="player-container" @touchend="onDrop($event, false)" @drop="onDrop($event, false)" @dragover.prevent @dragenter.prevent>
         <template v-for="player in playersIdle">
-            <div @dragstart='startDrag($event, player)' @dragover.prevent @dragenter.prevent
+            <div @touchstart='startDrag($event, player)' @dragstart='startDrag($event, player)' @dragover.prevent @dragenter.prevent
                  :draggable="!player.currentlyPlaying" :class="player.currentlyPlaying ? currentlyPlayingClass : ''"
                  class="player">
                 <img draggable="false" src="./src/assets/common/avatars/default.svg"
@@ -33,7 +33,9 @@
             <template v-for="(player, index) in playersPlaying">
                 <div @click="submitLose(player)" @dragstart='startDrag($event, player)' @dragover.prevent
                      @dragenter.prevent
-                     draggable="true" @drop="submitDraw($event, player)" class="player player-playing">
+                     draggable="true" @drop="submitDraw($event, player)"
+                     class="player player-playing"
+                     data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
                     <img draggable="false" src="./src/assets/common/avatars/default.svg"
                          class="rounded-circle player-avatar">
                     <div class="caption text-center">{{player.name}}</div>
@@ -71,7 +73,6 @@
         </template>
     </div>
 </div>
-
 <script src="./src/main.js"></script>
 </body>
 </html>

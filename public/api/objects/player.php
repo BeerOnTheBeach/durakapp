@@ -12,6 +12,7 @@ class Player
     public $name;
     public $losses;
     public $draws;
+    public $elo;
     public $color;
     public $currentlyPlaying;
     public $created;
@@ -46,24 +47,26 @@ class Player
         $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                name=:name, losses=:losses, draws=:draws, color=:color, currentlyPlaying=:currentlyPlaying, created=:created";
+                name=:name, losses=:losses, draws=:draws, elo=:elo, color=:color, currentlyPlaying=:currentlyPlaying, created=:created";
 
         // prepare query
         $stmt = $this->conn->prepare($query);
-
+        var_dump($this);
         // sanitize
         $this->name = htmlspecialchars(strip_tags($this->name));
         $this->losses = htmlspecialchars(strip_tags($this->losses));
         $this->draws = htmlspecialchars(strip_tags($this->draws));
+        $this->elo = htmlspecialchars(strip_tags($this->elo));
         $this->color = htmlspecialchars(strip_tags($this->color));
         $this->currentlyPlaying = htmlspecialchars(strip_tags($this->currentlyPlaying));
         $this->created = htmlspecialchars(strip_tags($this->created));
 
         // bind values
         $stmt->bindParam(":name", $this->name);
-        $stmt->bindParam(":price", $this->losses);
-        $stmt->bindParam(":description", $this->draws);
-        $stmt->bindParam(":category_id", $this->color);
+        $stmt->bindParam(":losses", $this->losses);
+        $stmt->bindParam(":draws", $this->draws);
+        $stmt->bindParam(":color", $this->color);
+        $stmt->bindParam(":elo", $this->elo);
         $stmt->bindParam(":currentlyPlaying", $this->currentlyPlaying);
         $stmt->bindParam(":created", $this->created);
 
@@ -103,6 +106,7 @@ class Player
         $this->name = $row['name'];
         $this->losses = $row['losses'];
         $this->draws = $row['draws'];
+        $this->color = $row['elo'];
         $this->color = $row['color'];
         $this->currentlyPlaying = $row['currentlyPlaying'];
         $this->created = $row['created'];
@@ -118,6 +122,7 @@ class Player
                 name = :name,
                 losses = :losses,
                 draws = :draws,
+                elo = :elo,
                 color = :color,
                 currentlyPlaying = :currentlyPlaying
             WHERE
@@ -130,6 +135,7 @@ class Player
         $this->name=htmlspecialchars(strip_tags($this->name));
         $this->losses=htmlspecialchars(strip_tags($this->losses));
         $this->draws=htmlspecialchars(strip_tags($this->draws));
+        $this->elo=htmlspecialchars(strip_tags($this->elo));
         $this->color=htmlspecialchars(strip_tags($this->color));
         $this->currentlyPlaying = htmlspecialchars(strip_tags($this->currentlyPlaying));
 
@@ -138,6 +144,7 @@ class Player
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':losses', $this->losses);
         $stmt->bindParam(':draws', $this->draws);
+        $stmt->bindParam(':elo', $this->elo);
         $stmt->bindParam(':color', $this->color);
         $stmt->bindParam(':currentlyPlaying', $this->currentlyPlaying);
 

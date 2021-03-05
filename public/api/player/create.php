@@ -22,17 +22,21 @@ $data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
 if(
-    !empty($data->name) &&
-    !empty($data->losses) &&
-    !empty($data->draws) &&
-    !empty($data->color)
+    isset($data->name) &&
+    isset($data->losses) &&
+    isset($data->draws) &&
+    isset($data->elo) &&
+    isset($data->color) &&
+    isset($data->currentlyPlaying)
 ){
 
     // set product property values
     $player->name = $data->name;
-    $player->loser = $data->losses;
-    $player->loser_2 = $data->draws;
-    $player->players = $data->color;
+    $player->losses = $data->losses;
+    $player->draws = $data->draws;
+    $player->elo = $data->elo;
+    $player->color = $data->color;
+    $player->currentlyPlaying = $data->currentlyPlaying;
     $player->created = date('Y-m-d H:i:s');
 
     // create the product

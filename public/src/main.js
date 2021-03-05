@@ -1,11 +1,7 @@
 const app = new Vue({
     el: ('#durakapp'),
     data: {
-        settings:
-            {
-                currentSessionId: "2",
-                dateFormat: {year: 'numeric', month: 'numeric', day: 'numeric'}
-            },
+        settings: [],
         playersIdle: [],
         games: [],
         playersPlaying: [],
@@ -14,7 +10,7 @@ const app = new Vue({
     computed: {
         gamesThisSession() {
             let filteredBySession = this.games.filter(
-                game => game.session_id === this.settings.currentSessionId
+                game => game.session_id === this.settings.id
             )
             let lastGames = [];
             for (let i = 0; i < filteredBySession.length; i++) {
@@ -32,6 +28,15 @@ const app = new Vue({
         }
     },
     created() {
+        //Get settings
+        axios.get('./api/settings/read.php')
+            .then(function (response) {
+                app.settings = response.data.records[0];
+            })
+            .catch(function (error) {
+                console.error(error)
+            });
+
         //Get player-data
         axios.get('./api/player/read.php')
             .then(function (response) {
@@ -43,11 +48,13 @@ const app = new Vue({
             .catch(function (error) {
                 console.error(error)
             });
+
         //Get games-data
         this.getGameData()
     },
     methods: {
         startDrag(evt, player) {
+            //TODO: different methods for mobile and desktop - cause that shits not working on mobile
             evt.dataTransfer.dropEffect = 'move'
             evt.dataTransfer.effectAllowed = 'move'
             evt.dataTransfer.setData('playerID', player.id)
@@ -118,7 +125,7 @@ const app = new Vue({
                 loser: loserId,
                 loser_2: loser_2Id,
                 players: players,
-                session_id: this.settings.currentSessionId
+                session_id: this.settings.id
             })
                 .then(function (response) {
                     console.log(response.data.message)
@@ -145,7 +152,15 @@ const app = new Vue({
             let lastGameDate = Math.round(new Date(Date.parse(lastGame.modified)).getTime()/1000)
             let currentDate = Math.round(new Date().getTime()/1000);
             if((currentDate - lastGameDate) / 24 / 60 / 60 >= 1) {
-                //TODO: Settings-Ajax to set current session (also add db-table..)
+                axios.post('./api/settings/update.php', {
+                    id: ++this.settings.id
+                })
+                    .then(function (response) {
+                        console.log(response.data.message)
+                    })
+                    .catch(function (error) {
+                        console.error(error)
+                    });
             }
         }
     },

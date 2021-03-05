@@ -4,7 +4,7 @@ class Database{
     private $host = "127.0.0.1";
     private $db_name = "durak_app";
     private $username = "root";
-    private $password = "cyxojr12!\"";
+    private $password = "";
     public $conn;
 
     // get the database connection
