@@ -14,16 +14,21 @@ const app = new Vue({
             )
             let lastGames = [];
             for (let i = 0; i < filteredBySession.length; i++) {
-                let loserName = this.playersIdle.find(player => player.id === filteredBySession[i].loser)
-                let loser2Name = this.playersIdle.find(player => player.id === filteredBySession[i].loser_2)
+
+                let loser = this.playersIdle.find(player => player.id === filteredBySession[i].loser)
+                let loser2 = this.playersIdle.find(player => player.id === filteredBySession[i].loser_2)
+                //Add loser
                 lastGames[i] = {
-                    loser: loserName.name,
-                    loser_2: loser2Name ? loser2Name.name : -1,
+                    loser: loser.name,
+                    loserColor: loser.color,
+                    loser_2: loser2 ? loser2.name : -1,
+                    loser2Color: loser2 ? loser2.color : "#212529",
                     players: filteredBySession[i].players,
                     modified: filteredBySession[i].modified,
                     session_id: this.settings.currentSessionId
                 }
             }
+            //Return games reversed, so last game is displayed first (you could also do this in vue-html i think)
             return lastGames.reverse();
         }
     },
@@ -64,51 +69,52 @@ const app = new Vue({
             const player = this.playersIdle.find(player => player.id === playerID)
             if (isPlayingList && !player.currentlyPlaying) {
                 this.playersPlaying.push(player);
-                axios.post('./api/player/update.php', {
-                    id: player.id,
-                    name: player.name,
-                    losses: player.losses,
-                    draws: player.draws,
-                    color: player.color,
-                    currentlyPlaying: 1
-                })
-                    .then(function (response) {
-                        console.log(response.data.message)
-                    })
-                    .catch(function (error) {
-                        console.error(error)
-                    });
+                player.currentlyPlaying = 1;
+                this.updatePlayer(player)
             } else if (!isPlayingList) {
                 const index = this.playersPlaying.indexOf(player);
                 if (index > -1) {
-                    axios.post('./api/player/update.php', {
-                        id: player.id,
-                        name: player.name,
-                        losses: player.losses,
-                        draws: player.draws,
-                        color: player.color,
-                        currentlyPlaying: 0
-                    })
-                        .then(function (response) {
-                            console.log(response.data.message)
-                        })
-                        .catch(function (error) {
-                            console.error(error)
-                        });
+                    player.currentlyPlaying = 0;
+                    this.updatePlayer(player)
                     this.playersPlaying.splice(index, 1);
                 }
             }
             player.currentlyPlaying = isPlayingList
         },
         submitDraw(evt, player) {
-            const playerID = evt.dataTransfer.getData('playerID')
-            const playerDragged = this.playersIdle.find(player => player.id === playerID)
+            let playerID = evt.dataTransfer.getData('playerID')
+            let playerDragged = this.playersIdle.find(player => player.id === playerID)
             if (playerDragged.currentlyPlaying && playerDragged !== player) {
                 this.createGame(playerDragged.id, player.id);
+                //Update player-data
+                let players = this.playersPlaying;
+                for (let i = 0; i < players.length; i++) {
+                    if (players[i] === playerDragged || players[i] === player) {
+                        players[i].draws++;
+                    }
+                    players[i].gamescount++
+                    this.updatePlayer(players[i])
+                }
             }
         },
-        submitLose(player) {
-            this.createGame(player.id, -1);
+        submitLose(loser) {
+            //Can't play alone :<
+            if (this.playersPlaying.length >= 2) {
+                //Save game to db
+                this.createGame(loser.id, -1);
+                //Update player-data
+                let players = this.playersPlaying;
+                for (let i = 0; i < players.length; i++) {
+                    if (players[i] === loser) {
+                        players[i].losses++;
+                    }
+                    players[i].gamescount++
+                    this.updatePlayer(players[i])
+                }
+            } else {
+                //TODO: Add alert-message
+            }
+
         },
         getPlayersPlaying() {
             let players = ''
@@ -128,8 +134,17 @@ const app = new Vue({
                 session_id: this.settings.id
             })
                 .then(function (response) {
-                    console.log(response.data.message)
                     app.getGameData()
+                    return true
+                })
+                .catch(function (error) {
+                    console.error(error)
+                });
+        },
+        updatePlayer(player) {
+            axios.post('/api/player/update.php', player)
+                .then(function (response) {
+                    console.log(response.data.message)
                 })
                 .catch(function (error) {
                     console.error(error)
@@ -149,9 +164,9 @@ const app = new Vue({
         setSettings() {
             //New Session if last game is more than 24h away
             let lastGame = app.games[app.games.length - 1];
-            let lastGameDate = Math.round(new Date(Date.parse(lastGame.modified)).getTime()/1000)
-            let currentDate = Math.round(new Date().getTime()/1000);
-            if((currentDate - lastGameDate) / 24 / 60 / 60 >= 1) {
+            let lastGameDate = Math.round(new Date(Date.parse(lastGame.modified)).getTime() / 1000)
+            let currentDate = Math.round(new Date().getTime() / 1000);
+            if ((currentDate - lastGameDate) / 24 / 60 / 60 >= 1) {
                 axios.post('./api/settings/update.php', {
                     id: ++this.settings.id
                 })
@@ -163,5 +178,5 @@ const app = new Vue({
                     });
             }
         }
-    },
+    }
 })

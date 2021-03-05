@@ -39,6 +39,8 @@ if($num>0){
             "name" => $name,
             "losses" => $losses,
             "draws" => $draws,
+            "gamescount" => $gamescount,
+            "elo" => $elo,
             "color" => $color,
             "currentlyPlaying" => boolval($currentlyPlaying),
         );

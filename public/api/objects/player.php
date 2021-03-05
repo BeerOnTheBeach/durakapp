@@ -12,6 +12,7 @@ class Player
     public $name;
     public $losses;
     public $draws;
+    public $gamescount;
     public $elo;
     public $color;
     public $currentlyPlaying;
@@ -56,6 +57,7 @@ class Player
         $this->name = htmlspecialchars(strip_tags($this->name));
         $this->losses = htmlspecialchars(strip_tags($this->losses));
         $this->draws = htmlspecialchars(strip_tags($this->draws));
+        $this->gamescount = htmlspecialchars(strip_tags($this->gamescount));
         $this->elo = htmlspecialchars(strip_tags($this->elo));
         $this->color = htmlspecialchars(strip_tags($this->color));
         $this->currentlyPlaying = htmlspecialchars(strip_tags($this->currentlyPlaying));
@@ -66,6 +68,7 @@ class Player
         $stmt->bindParam(":losses", $this->losses);
         $stmt->bindParam(":draws", $this->draws);
         $stmt->bindParam(":color", $this->color);
+        $stmt->bindParam(":gamescount", $this->gamescount);
         $stmt->bindParam(":elo", $this->elo);
         $stmt->bindParam(":currentlyPlaying", $this->currentlyPlaying);
         $stmt->bindParam(":created", $this->created);
@@ -106,7 +109,8 @@ class Player
         $this->name = $row['name'];
         $this->losses = $row['losses'];
         $this->draws = $row['draws'];
-        $this->color = $row['elo'];
+        $this->gamescount = $row['gamescount'];
+        $this->elo = $row['elo'];
         $this->color = $row['color'];
         $this->currentlyPlaying = $row['currentlyPlaying'];
         $this->created = $row['created'];
@@ -122,6 +126,7 @@ class Player
                 name = :name,
                 losses = :losses,
                 draws = :draws,
+                gamescount = :gamescount,
                 elo = :elo,
                 color = :color,
                 currentlyPlaying = :currentlyPlaying
@@ -135,6 +140,7 @@ class Player
         $this->name=htmlspecialchars(strip_tags($this->name));
         $this->losses=htmlspecialchars(strip_tags($this->losses));
         $this->draws=htmlspecialchars(strip_tags($this->draws));
+        $this->gamescount=htmlspecialchars(strip_tags($this->gamescount));
         $this->elo=htmlspecialchars(strip_tags($this->elo));
         $this->color=htmlspecialchars(strip_tags($this->color));
         $this->currentlyPlaying = htmlspecialchars(strip_tags($this->currentlyPlaying));
@@ -144,6 +150,7 @@ class Player
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':losses', $this->losses);
         $stmt->bindParam(':draws', $this->draws);
+        $stmt->bindParam(':gamescount', $this->gamescount);
         $stmt->bindParam(':elo', $this->elo);
         $stmt->bindParam(':color', $this->color);
         $stmt->bindParam(':currentlyPlaying', $this->currentlyPlaying);

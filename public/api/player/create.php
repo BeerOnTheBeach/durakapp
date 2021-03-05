@@ -34,6 +34,7 @@ if(
     $player->name = $data->name;
     $player->losses = $data->losses;
     $player->draws = $data->draws;
+    $player->gamescount = $data->gamescount;
     $player->elo = $data->elo;
     $player->color = $data->color;
     $player->currentlyPlaying = $data->currentlyPlaying;

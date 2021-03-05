@@ -30,6 +30,8 @@ if($player->name!=null){
         "name" => $player->name,
         "losses" => $player->losses,
         "draws" => $player->draws,
+        "gamescount" => $player->gamescount,
+        "elo" => $player->elo,
         "color" => $player->color,
         "currentlyPlaying" => $player->currentlyPlaying,
     );

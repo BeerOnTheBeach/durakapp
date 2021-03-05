@@ -18,10 +18,10 @@ $db = $database->getConnection();
 $player = new Player($db);
 
 // get product id
-$data = json_decode(file_get_contents("php://input"));
+$id = json_decode(file_get_contents("php://input"));
 
 // set product id to be deleted
-$player->id = $data->id;
+$player->id = $id;
 
 // delete the product
 if($player->delete()){
