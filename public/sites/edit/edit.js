@@ -51,7 +51,7 @@ const edit = new Vue({
     },
     created() {
         //Get player-data
-        axios.get('/api/player/read.php')
+        axios.get('../../api/player/read.php')
             .then(function (response) {
                 //Init players
                 edit.players = response.data.records;
@@ -71,7 +71,7 @@ const edit = new Vue({
 
             //Check if player with that name already exists
             if (!this.playerAlreadyExists(this.form.name)) {
-                axios.post('/api/player/create.php', this.form)
+                axios.post('../../api/player/create.php', this.form)
                     .then((res) => {
                         this.alert.playerCreate.success.message = "Spieler '" + this.form.name + "' wurde hinzugefügt."
                         this.alert.playerCreate.success.show = true
@@ -91,7 +91,7 @@ const edit = new Vue({
             this.hideAlerts();
 
             //Update player
-            axios.post('/api/player/update.php', this.profile.player)
+            axios.post('../../api/player/update.php', this.profile.player)
                 .then((res) => {
                     this.alert.playerUpdate.success.message = "Spieler '" + this.profile.player.name + "' wurde erfolgreich gespeichert."
                     this.alert.playerUpdate.success.show = true
@@ -107,7 +107,7 @@ const edit = new Vue({
             //Check if this player has already played at least on game.
             if(this.profile.player.losses === '0' && this.profile.player.draws === '0') {
                 //Delete player
-                axios.post('/api/player/delete.php', this.profile.player.id)
+                axios.post('../../api/player/delete.php', this.profile.player.id)
                     .then((res) => {
                         console.log(res)
                         this.alert.playerDelete.success.message = "Spieler '" + this.profile.player.name + "' wurde gelöscht"

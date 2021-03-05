@@ -34,7 +34,7 @@ const app = new Vue({
     },
     created() {
         //Get settings
-        axios.get('./api/settings/read.php')
+        axios.get('../api/settings/read.php')
             .then(function (response) {
                 app.settings = response.data.records[0];
             })
@@ -43,7 +43,7 @@ const app = new Vue({
             });
 
         //Get player-data
-        axios.get('./api/player/read.php')
+        axios.get('../api/player/read.php')
             .then(function (response) {
                 app.playersIdle = response.data.records;
                 app.playersPlaying = response.data.records.filter(
@@ -127,7 +127,7 @@ const app = new Vue({
         },
         createGame(loserId, loser_2Id) {
             let players = this.getPlayersPlaying();
-            axios.post('./api/game/create.php', {
+            axios.post('../api/game/create.php', {
                 loser: loserId,
                 loser_2: loser_2Id,
                 players: players,
@@ -142,7 +142,7 @@ const app = new Vue({
                 });
         },
         updatePlayer(player) {
-            axios.post('/api/player/update.php', player)
+            axios.post('../api/player/update.php', player)
                 .then(function (response) {
                     console.log(response.data.message)
                 })
@@ -152,7 +152,7 @@ const app = new Vue({
         },
         getGameData() {
             //Get games-data
-            axios.get('./api/game/read.php')
+            axios.get('../api/game/read.php')
                 .then(function (response) {
                     app.games = response.data.records;
                     app.setSettings();
@@ -167,7 +167,7 @@ const app = new Vue({
             let lastGameDate = Math.round(new Date(Date.parse(lastGame.modified)).getTime() / 1000)
             let currentDate = Math.round(new Date().getTime() / 1000);
             if ((currentDate - lastGameDate) / 24 / 60 / 60 >= 1) {
-                axios.post('./api/settings/update.php', {
+                axios.post('../api/settings/update.php', {
                     id: ++this.settings.id
                 })
                     .then(function (response) {
