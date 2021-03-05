@@ -68,6 +68,12 @@
                                aria-label="Spiele unentschieden" disabled>
                     </div>
                     <div class="col-md">
+                        <label for="games-count" class="form-label">Spiele gesamt</label>
+                        <input v-model="form.gamescount" id="games-count" class="form-control" value="0" type="text"
+                               placeholder="0"
+                               aria-label="Spiele gesamt" disabled>
+                    </div>
+                    <div class="col-md">
                         <label for="player-elo" class="form-label">Spieler-Elo</label>
                         <input v-model="form.elo" class="form-control" type="text" value="1500" placeholder="1500"
                                aria-label="Elo" disabled>
@@ -120,6 +126,12 @@
                                type="text"
                                placeholder="0"
                                aria-label="Spiele unentschieden" disabled>
+                    </div>
+                    <div class="col-md">
+                        <label for="games-count" class="form-label">Spiele gesamt</label>
+                        <input v-model="profile.player.gamescount" id="games-count" class="form-control" value="0" type="text"
+                               placeholder="0"
+                               aria-label="Spiele gesamt" disabled>
                     </div>
                     <div class="col-md">
                         <label for="player-elo" class="form-label">Spieler-Elo</label>
@@ -177,6 +189,13 @@
                                type="text"
                                placeholder="0"
                                aria-label="Spiele unentschieden" disabled>
+                    </div>
+                    <div class="col-md">
+                        <label for="games-count" class="form-label">Spiele gesamt</label>
+                        <input :value="profile.player.gamescount" id="games-count" class="form-control"
+                               type="text"
+                               placeholder="0"
+                               aria-label="Spiele gesamt" disabled>
                     </div>
                     <div class="col-md">
                         <label for="player-elo" class="form-label">Spieler-Elo</label>
