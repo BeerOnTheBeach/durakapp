@@ -52,18 +52,7 @@ const edit = new Vue({
     },
     created() {
         //Get player-data
-        axios.get('../../api/player/read.php')
-            .then(function (response) {
-                //Init players
-                edit.players = response.data.records;
-                //Add active-class to every player after api-call so it wont be overwritten
-                for (let i = 0; i < edit.players.length; i++) {
-                    edit.$set(edit.players[i], 'isActive', false)
-                }
-            })
-            .catch(function (error) {
-                console.error(error)
-            });
+        this.readPlayerData()
     },
     methods: {
         createPlayer() {
@@ -76,8 +65,8 @@ const edit = new Vue({
                     .then((res) => {
                         this.alert.playerCreate.success.message = "Spieler '" + this.form.name + "' wurde hinzugefügt."
                         this.alert.playerCreate.success.show = true
-                        //Push player to players-array, so we dont have to call the api again (would work too)
-                        this.players.push(this.form)
+                        //Call api again
+                        this.readPlayerData()
                     })
                     .catch((error) => {
                         console.log(error)
@@ -106,11 +95,10 @@ const edit = new Vue({
             this.hideAlerts();
 
             //Check if this player has already played at least on game.
-            if(this.profile.player.losses === '0' && this.profile.player.draws === '0') {
+            if(this.profile.player.gamescount === '0') {
                 //Delete player
                 axios.post('../../api/player/delete.php', this.profile.player.id)
                     .then((res) => {
-                        console.log(res)
                         this.alert.playerDelete.success.message = "Spieler '" + this.profile.player.name + "' wurde gelöscht"
                         this.alert.playerDelete.success.show = true
 
@@ -152,6 +140,20 @@ const edit = new Vue({
             this.alert.playerDelete.success.show = false
             this.alert.playerDelete.failed.show = false
             this.alert.playerUpdate.success.show = false
+        },
+        readPlayerData() {
+            axios.get('../../api/player/read.php')
+                .then(function (response) {
+                    //Init players
+                    edit.players = response.data.records;
+                    //Add active-class to every player after api-call so it wont be overwritten
+                    for (let i = 0; i < edit.players.length; i++) {
+                        edit.$set(edit.players[i], 'isActive', false)
+                    }
+                })
+                .catch(function (error) {
+                    console.error(error)
+                });
         }
     }
 })

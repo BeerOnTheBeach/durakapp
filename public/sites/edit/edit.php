@@ -78,7 +78,7 @@
                         <input v-model="form.elo" class="form-control" type="text" value="1500" placeholder="1500"
                                aria-label="Elo" disabled>
                     </div>
-                    <button type="submit" class="btn btn-primary form-control">Bestätigen</button>
+                    <button type="submit" class="btn btn-primary form-control">Spieler hinzufügen</button>
                 </div>
                 <div class="alert alert-success alert-message" v-if="alert.playerCreate.success.show">
                     {{alert.playerCreate.success.message}}
@@ -139,7 +139,7 @@
                                placeholder="1500"
                                aria-label="Elo" disabled>
                     </div>
-                    <button type="submit" class="btn btn-danger form-control">Bestätigen</button>
+                    <button type="submit" class="btn btn-danger form-control">Spieler entfernen</button>
                 </div>
                 <div class="alert alert-success alert-message" v-if="alert.playerDelete.success.show">
                     {{alert.playerDelete.success.message}}
@@ -203,7 +203,7 @@
                                placeholder="1500"
                                aria-label="Elo" disabled>
                     </div>
-                    <button type="submit" class="btn btn-primary form-control">Bestätigen</button>
+                    <button type="submit" class="btn btn-primary form-control">Änderungen speichern</button>
                 </div>
                 <div class="alert alert-success alert-message" v-if="alert.playerUpdate.success.show">
                     {{alert.playerUpdate.success.message}}
