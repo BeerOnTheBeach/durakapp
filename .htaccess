@@ -1,7 +1,0 @@
-#Protect Directory
-<If "req('Host') == 'www.beeronthebeach.de' || req('Host') == 'beeronthebeach.de'">
-  AuthName "Dialog prompt"
-  AuthType Basic
-  AuthUserFile /var/www/jojosnumbers/.htpasswd
-  Require valid-user
-</If>
