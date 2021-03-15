@@ -25,6 +25,7 @@ if(
     isset($data->name) &&
     isset($data->losses) &&
     isset($data->draws) &&
+    isset($data->gamescount) &&
     isset($data->elo) &&
     isset($data->color) &&
     isset($data->currentlyPlaying)
