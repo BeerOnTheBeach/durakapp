@@ -10,6 +10,7 @@ $fileName = $_FILES['durak_csv']['tmp_name'];
 $row = 1;
 if (($handle = fopen($fileName, "r")) !== FALSE) {
     $playerIdsSorted = [];
+    $lastRowDate = '';
     while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
         $num = count($data);
 
@@ -19,48 +20,64 @@ if (($handle = fopen($fileName, "r")) !== FALSE) {
             //Map players to cols by index
             $playerIdsSorted = getPlayerIdsSorted($data);
         } else {
-            for ($c = 0; $c < $num; $c++) {
-                importGame($data, $playerIdsSorted);
-            }
+            importGame($data, $playerIdsSorted, $lastRowDate);
+            $lastRowDate = $data[0];
         }
         $row++;
     }
     fclose($handle);
 }
 
-function importGame(array $gameRow, array $playerIdsSorted) {
+function importGame(array $gameRow, array $playerIdsSorted, string $lastRowDate) {
     $database = new Database();
     $db = $database->getConnection();
 
     $game = new Game($db);
 
     // set product property values
-    $game->loser = $data->loser;
-    $game->loser_2 = $data->loser_2;
-    $game->session_id = 0;
-    $game->created = formatDate($gameRow);
+    if($lastRowDate !== '' && $gameRow[0]) {
+        $game->session_id = 0;
+    }
+    $game->created = formatDate($gameRow[0]);
 
 
     $participants = '';
-    $drawPlayers = [];
+    $game->loser = '';
 
     foreach ($gameRow as $key => $gameField) {
-        // To $key must be added 2, because there are 'date' and 'anzahl' cols missing
-        $playerId = $playerIdsSorted[$key+2];
+        if ($key == 0 || $key == 1) continue;
+        if($key >= count($playerIdsSorted)) break;
+        // To $key must be minus 2, because there are 'date' and 'anzahl' cols missing
+
+        $playerId = $playerIdsSorted[$key];
         // '1' in CSV is defined as the loser of the game
         if($gameField === '1') {
             $game->loser = $playerId;
+            $participants .= "$playerId,";
         }
         // '0' in CSV is defined as participant whom didn't lose
         if($gameField === '0') {
             $participants .= "$playerId,";
         }
         // '2' in CSV is defined as draw. There have to be 2 draw
-        
-    }
+        // 3.1.;5;0;0;;2;2;;;;;;;;;;;;;;;;
+        if($gameField === '2') {
+            if($game->loser === '') {
+                $game->loser = $playerId;
+            } else {
+                $game->loser_2 = $playerId;
+            }
+            $participants .= "$playerId,";
 
+        }
+    }
     //Remove last comma from $participants
     $game->players = substr($participants, 0, -1);
+    if ($game->create()) {
+        echo "Game was successfully created";
+    } else {
+        echo "Game couldn't be created";
+    }
 }
 
 function formatDate($date) : string {
