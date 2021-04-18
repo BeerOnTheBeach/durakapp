@@ -66,19 +66,19 @@ const app = new Vue({
         onDrop(evt, isPlayingList) {
             const playerID = evt.dataTransfer.getData('playerID')
             const player = this.playersIdle.find(player => player.id === playerID)
-            if (isPlayingList && !player.currentlyPlaying) {
+            if (isPlayingList && !player.currentlyPlaying && this.playersPlaying.length < 6) {
                 this.playersPlaying.push(player);
-                player.currentlyPlaying = 1;
+                player.currentlyPlaying = isPlayingList
                 this.updatePlayer(player)
             } else if (!isPlayingList) {
+                console.log("Player dropped on bench")
                 const index = this.playersPlaying.indexOf(player);
                 if (index > -1) {
-                    player.currentlyPlaying = 0;
+                    player.currentlyPlaying = isPlayingList
                     this.updatePlayer(player)
                     this.playersPlaying.splice(index, 1);
                 }
             }
-            player.currentlyPlaying = isPlayingList
         },
         submitDraw(evt, player) {
             let playerID = evt.dataTransfer.getData('playerID')
@@ -155,6 +155,14 @@ const app = new Vue({
                 .then(function (response) {
                     app.games = response.data.records;
                     app.setSettings();
+                })
+                .catch(function (error) {
+                    console.error(error)
+                });
+            //Get Settings again
+            axios.get('./api/settings/read.php')
+                .then(function (response) {
+                    app.settings = response.data.records[0];
                 })
                 .catch(function (error) {
                     console.error(error)

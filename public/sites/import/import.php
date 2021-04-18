@@ -7,11 +7,17 @@ include_once '../../api/objects/game.php';
 // file name
 $fileName = $_FILES['durak_csv']['tmp_name'];
 
+// last month given
+$GLOBALS['lastMonth'] = 0;
+$GLOBALS['year'] = 2020;
+$GLOBALS['lastTimestamp'] = 0;
+$GLOBALS['seassionId'] = 1;
+
 $row = 1;
 if (($handle = fopen($fileName, "r")) !== FALSE) {
     $playerIdsSorted = [];
     $lastRowDate = '';
-    while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+    while (($data = fgetcsv($handle, 1000, ";")) != FALSE) {
         $num = count($data);
 
         if ($row === 1) {
@@ -34,12 +40,9 @@ function importGame(array $gameRow, array $playerIdsSorted, string $lastRowDate)
 
     $game = new Game($db);
 
-    // set product property values
-    if($lastRowDate !== '' && $gameRow[0]) {
-        $game->session_id = 0;
-    }
     $game->created = formatDate($gameRow[0]);
 
+    $game->session_id = getSeassionId($game->created);
 
     $participants = '';
     $game->loser = '';
@@ -74,15 +77,40 @@ function importGame(array $gameRow, array $playerIdsSorted, string $lastRowDate)
     //Remove last comma from $participants
     $game->players = substr($participants, 0, -1);
     if ($game->create()) {
-        echo "Game was successfully created";
+        echo "\rGame was successfully created<br>";
     } else {
-        echo "Game couldn't be created";
+        echo "\rGame couldn't be created...<br>";
+    }
+}
+
+function getSeassionId($timestamp) {
+    var_dump($GLOBALS['lastTimestamp']);
+    var_dump($timestamp);
+    if($GLOBALS['lastTimestamp'] === 0) {
+        $GLOBALS['lastTimestamp'] = $timestamp;
+        return $GLOBALS['seassionId'];
+    }
+    $timestamp = strtotime($timestamp);
+    $lastTimestamp = strtotime($GLOBALS['lastTimestamp']);
+
+    if($timestamp / 24 / 60 / 60 - $lastTimestamp / 24 / 60 / 60 >= 1) {
+        return $GLOBALS['seassionId']++;
+    } else {
+        return $GLOBALS['seassionId'];
     }
 }
 
 function formatDate($date) : string {
-    //Date is in format 'd.m', TODO: has to be in 'Y-m-d H:i:s'
-    return $date;
+    //Date is given as format 'd.m.'
+    $date = explode('.', $date);
+    $fullDate = '-' .  $date[1] . '-' . $date[0] . ' 00:00:00';
+    //year +1 if this month is smaller than the last month (obviously)
+    if(intval($GLOBALS['lastMonth']) > intval($date[1])) {
+        $GLOBALS['year']++;
+    }
+    $fullDate = $GLOBALS['year'] . $fullDate;
+    $GLOBALS['lastMonth'] = $date[1];
+    return $fullDate;
 }
 
 function getPlayerIdsSorted(array $playersCSV) : array {
