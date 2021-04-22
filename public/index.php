@@ -16,9 +16,9 @@
 <body>
 
 <div id="durakapp" class="">
-    <div class="player-container" @touchend="onDrop($event, false)" @drop="onDrop($event, false)" @dragover.prevent @dragenter.prevent>
+    <div id="player-container" class="player-container" @drop="onDrop($event, false)" @dragover.prevent @dragenter.prevent>
         <template v-for="player in playersIdle">
-            <div @touchstart='startDrag($event, player)' @dragstart='startDrag($event, player)' @dragover.prevent @dragenter.prevent
+            <div @touchend="onTouchEnd($event, player)" @touchstart="onTouchStart($event)" @touchmove='onTouchMove($event)' @dragstart='startDrag($event, player)' @dragover.prevent @dragenter.prevent
                  :draggable="!player.currentlyPlaying" :class="player.currentlyPlaying ? currentlyPlayingClass : ''"
                  class="player">
                 <svg xmlns="http://www.w3.org/2000/svg" width="75" height="75" :fill="player.color" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -31,11 +31,12 @@
     </div>
     <div class="game-table-container">
         <h1 class="text-center">Spielertisch</h1>
-        <div @dragover.prevent @dragenter.prevent @drop="onDrop($event, true)" class="game-table">
+        <div @dragover.prevent @dragenter.prevent @drop="onDrop($event, true)" id="game-table" class="game-table">
             <template v-for="(player, index) in playersPlaying">
-                <div @click="submitLose(player)" @dragstart='startDrag($event, player)' @dragover.prevent
+                <div @touchend="onTouchEnd($event, player)" @touchstart="onTouchStart($event)" @touchmove='onTouchMove($event)' @click="submitLose(player)" @dragstart='startDrag($event, player)' @dragover.prevent
                      @dragenter.prevent
                      draggable="true" @drop="submitDraw($event, player)"
+                     :id="player.name"
                      class="player player-playing"
                      data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
                     <svg xmlns="http://www.w3.org/2000/svg" width="75" height="75" :fill="player.color" class="bi bi-person-circle" viewBox="0 0 16 16">

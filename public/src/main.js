@@ -6,6 +6,7 @@ const app = new Vue({
         games: [],
         playersPlaying: [],
         currentlyPlayingClass: "currentlyPlaying",
+        dragTimeout: true,
     },
     computed: {
         gamesThisSession() {
@@ -58,10 +59,81 @@ const app = new Vue({
     },
     methods: {
         startDrag(evt, player) {
-            //TODO: different methods for mobile and desktop - cause that shits not working on mobile
             evt.dataTransfer.dropEffect = 'move'
             evt.dataTransfer.effectAllowed = 'move'
             evt.dataTransfer.setData('playerID', player.id)
+        },
+        onTouchStart(evt) {
+            //set timer here, so it wont overwrite the click-event on a single-click
+            this.dragTimeout = Date.now();
+        },
+        onTouchMove(evt) {
+            //check this timer here
+            if (this.dragTimeout + 250 <= Date.now()) {
+                let playerContainer = evt.target.closest(".player")
+                let touchLocation = evt.targetTouches[0]
+                playerContainer.style.position = "absolute";
+                playerContainer.style.left = touchLocation.pageX + 'px';
+                playerContainer.style.top = touchLocation.pageY + 'px';
+            }
+        },
+        onTouchEnd(evt, player) {
+            //check timer here again
+            if (this.dragTimeout + 250 <= Date.now()) {
+                let playerEl = evt.target.closest(".player")
+                let elementPositionX = playerEl.style.left.replace('px', '')
+                let elementPositionY = playerEl.style.top.replace('px', '')
+                //Get gameTable and bench rectangles
+                let gameTableRect = document.getElementById("game-table").getBoundingClientRect()
+                let benchRect = document.getElementById("player-container").getBoundingClientRect()
+                //Check where the player was dropped and add it to corresponding array
+                if (this.wasDroppedOn(elementPositionX, elementPositionY, gameTableRect)
+                    && !player.currentlyPlaying && this.playersPlaying.length < 6) {
+                    console.log("was dropped in table");
+                    this.playersPlaying.push(player);
+                    player.currentlyPlaying = 1;
+                    this.updatePlayer(player)
+                } else if(this.wasDroppedOn(elementPositionX, elementPositionY, benchRect)) {
+                    const index = this.playersPlaying.indexOf(player);
+                    if (index > -1) {
+                        console.log("was dropped on bench");
+                        player.currentlyPlaying = 0
+                        this.updatePlayer(player)
+                        this.playersPlaying.splice(index, 1);
+                    }
+                } else {
+                    this.playersPlaying.forEach(function (playerDroppedOn) {
+                        //Get player rect
+                        let playerRect = document.getElementById(playerDroppedOn.name).getBoundingClientRect()
+                        //check if it was dropped on player
+                        console.log(playerRect)
+                        if(app.wasDroppedOn(elementPositionX, elementPositionY, playerRect)) {
+                            //submit draw
+                            console.log("was dropped on" + playerDroppedOn.name)
+                            app.createGame(playerDroppedOn.id, player.id);
+                            //update players
+                            app.playersPlaying.forEach(function (_player) {
+                                if (_player === playerDroppedOn || _player === player) {
+                                    _player.draws++;
+                                }
+                                _player.gamescount++
+                                app.updatePlayer(_player)
+                            })
+                            return true;
+                        }
+                    })
+                }
+                playerEl.style.position = "unset";
+                playerEl.style.left = "unset";
+                playerEl.style.top = "unset";
+            }
+        },
+        wasDroppedOn(elementPositionX, elementPositionY, rect) {
+            if ((elementPositionX >= rect.x && elementPositionX <= rect.x + rect.width)
+                &&
+                (elementPositionY >= rect.y && elementPositionY <= rect.y + rect.height)) {
+                return true;
+            }
         },
         onDrop(evt, isPlayingList) {
             const playerID = evt.dataTransfer.getData('playerID')
@@ -97,6 +169,7 @@ const app = new Vue({
             }
         },
         submitLose(loser) {
+            console.log("click event")
             //Can't play alone :<
             if (this.playersPlaying.length >= 2) {
                 //Save game to db
