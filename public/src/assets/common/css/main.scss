@@ -1,6 +1,9 @@
+html,
+body {
+    overscroll-behavior-y: contain;
+}
 
 .player-container {
-    position: absolute;
     overflow: auto;
     white-space: nowrap;
     height: 150px;

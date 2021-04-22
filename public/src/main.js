@@ -70,19 +70,30 @@ const app = new Vue({
         onTouchMove(evt) {
             //check this timer here
             if (this.dragTimeout + 250 <= Date.now()) {
-                let playerContainer = evt.target.closest(".player")
+                let playerAvatar = evt.target.closest(".player")
                 let touchLocation = evt.targetTouches[0]
-                playerContainer.style.position = "absolute";
-                playerContainer.style.left = touchLocation.pageX + 'px';
-                playerContainer.style.top = touchLocation.pageY + 'px';
+                playerAvatar.style.position = "fixed";
+                //get margin to fix offset set by it
+                let playerAvatarMargin = getComputedStyle(playerAvatar).margin.replace('px', '')
+                //get element height/width, half it and subtract that too, cause of 'offset' made by element
+                //TODO: dont hardcode that...
+                let playerAvatarOffset = 50;
+                playerAvatar.style.left = touchLocation.pageX - playerAvatarMargin - playerAvatarOffset + 'px';
+                playerAvatar.style.top = touchLocation.pageY - playerAvatarMargin - playerAvatarOffset + 'px';
+
             }
         },
         onTouchEnd(evt, player) {
             //check timer here again
             if (this.dragTimeout + 250 <= Date.now()) {
-                let playerEl = evt.target.closest(".player")
-                let elementPositionX = playerEl.style.left.replace('px', '')
-                let elementPositionY = playerEl.style.top.replace('px', '')
+                let playerAvatar = evt.target.closest(".player")
+                //get margin to fix offset set by it
+                let playerAvatarMargin = getComputedStyle(playerAvatar).margin.replace('px', '')
+                //get element height/width, half it and subtract that too, cause of 'offset' made by element
+                //TODO: dont hardcode that...
+                let playerAvatarOffset = 50;
+                let elementPositionX = playerAvatar.style.left.replace('px', '') + playerAvatarMargin + playerAvatarOffset
+                let elementPositionY = playerAvatar.style.top.replace('px', '') + playerAvatarMargin + playerAvatarOffset
                 //Get gameTable and bench rectangles
                 let gameTableRect = document.getElementById("game-table").getBoundingClientRect()
                 let benchRect = document.getElementById("player-container").getBoundingClientRect()
@@ -123,9 +134,9 @@ const app = new Vue({
                         }
                     })
                 }
-                playerEl.style.position = "unset";
-                playerEl.style.left = "unset";
-                playerEl.style.top = "unset";
+                playerAvatar.style.position = "unset";
+                playerAvatar.style.left = "unset";
+                playerAvatar.style.top = "unset";
             }
         },
         wasDroppedOn(elementPositionX, elementPositionY, rect) {
