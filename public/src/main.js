@@ -7,6 +7,8 @@ const app = new Vue({
         playersPlaying: [],
         currentlyPlayingClass: "currentlyPlaying",
         dragTimeout: true,
+        touchPositionX: 0,
+        touchPositionY: 0,
     },
     computed: {
         gamesThisSession() {
@@ -80,7 +82,8 @@ const app = new Vue({
                 let playerAvatarOffset = 50;
                 playerAvatar.style.left = touchLocation.pageX - playerAvatarMargin - playerAvatarOffset + 'px';
                 playerAvatar.style.top = touchLocation.pageY - playerAvatarMargin - playerAvatarOffset + 'px';
-
+                this.touchPositionX = evt.targetTouches[0].pageX
+                this.touchPositionY = evt.targetTouches[0].pageY
             }
         },
         onTouchEnd(evt, player) {
@@ -92,19 +95,19 @@ const app = new Vue({
                 //get element height/width, half it and subtract that too, cause of 'offset' made by element
                 //TODO: dont hardcode that...
                 let playerAvatarOffset = 50;
-                let elementPositionX = playerAvatar.style.left.replace('px', '') + playerAvatarMargin + playerAvatarOffset
-                let elementPositionY = playerAvatar.style.top.replace('px', '') + playerAvatarMargin + playerAvatarOffset
+                let elementPositionX = playerAvatar.style.left.replace('px', '')
+                let elementPositionY = playerAvatar.style.top.replace('px', '')
                 //Get gameTable and bench rectangles
                 let gameTableRect = document.getElementById("game-table").getBoundingClientRect()
                 let benchRect = document.getElementById("player-container").getBoundingClientRect()
                 //Check where the player was dropped and add it to corresponding array
-                if (this.wasDroppedOn(elementPositionX, elementPositionY, gameTableRect)
+                if (this.wasDroppedOn(this.touchPositionX, this.touchPositionY, gameTableRect)
                     && !player.currentlyPlaying && this.playersPlaying.length < 6) {
                     console.log("was dropped in table");
                     this.playersPlaying.push(player);
                     player.currentlyPlaying = 1;
                     this.updatePlayer(player)
-                } else if(this.wasDroppedOn(elementPositionX, elementPositionY, benchRect)) {
+                } else if(this.wasDroppedOn(this.touchPositionX, this.touchPositionY, benchRect)) {
                     const index = this.playersPlaying.indexOf(player);
                     if (index > -1) {
                         console.log("was dropped on bench");
@@ -112,15 +115,14 @@ const app = new Vue({
                         this.updatePlayer(player)
                         this.playersPlaying.splice(index, 1);
                     }
-                } else {
+                } else if(player.currentlyPlaying) {
                     this.playersPlaying.forEach(function (playerDroppedOn) {
                         //Get player rect
                         let playerRect = document.getElementById(playerDroppedOn.name).getBoundingClientRect()
                         //check if it was dropped on player
-                        console.log(playerRect)
-                        if(app.wasDroppedOn(elementPositionX, elementPositionY, playerRect)) {
+                        if(app.wasDroppedOn(app.touchPositionX, app.touchPositionY, playerRect) && player !== playerDroppedOn) {
                             //submit draw
-                            console.log("was dropped on" + playerDroppedOn.name)
+                            console.log("was dropped on: " + playerDroppedOn.name)
                             app.createGame(playerDroppedOn.id, player.id);
                             //update players
                             app.playersPlaying.forEach(function (_player) {
