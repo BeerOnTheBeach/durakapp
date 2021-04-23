@@ -68,6 +68,13 @@ const app = new Vue({
         onTouchStart(evt) {
             //set timer here, so it wont overwrite the click-event on a single-click
             this.dragTimeout = Date.now();
+            //disable swipe-down-reload
+            document.getElementsByTagName('body')[0].classList.add("anti-reload")
+            document.getElementsByTagName('html')[0].classList.add("anti-reload")
+            //disable scrolling
+            document.getElementsByTagName('body')[0].classList.add("anti-scroll")
+            document.getElementsByTagName('html')[0].classList.add("anti-scroll")
+
         },
         onTouchMove(evt) {
             //check this timer here
@@ -136,6 +143,11 @@ const app = new Vue({
                         }
                     })
                 }
+                //enable swipe-down-reload for android-chrome
+                document.getElementsByTagName('body')[0].classList.remove("anti-reload")
+                document.getElementsByTagName('html')[0].classList.remove("anti-reload")
+                document.getElementsByTagName('body')[0].classList.remove("anti-scroll")
+                document.getElementsByTagName('html')[0].classList.remove("anti-scroll")
                 playerAvatar.style.position = "unset";
                 playerAvatar.style.left = "unset";
                 playerAvatar.style.top = "unset";

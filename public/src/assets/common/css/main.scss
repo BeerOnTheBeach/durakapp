@@ -1,6 +1,8 @@
-html,
-body {
+.anti-reload {
     overscroll-behavior-y: contain;
+}
+.anti-scroll {
+    margin: 0; height: 100%; overflow: hidden
 }
 
 .player-container {
