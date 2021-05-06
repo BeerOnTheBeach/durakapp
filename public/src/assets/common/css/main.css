@@ -15,7 +15,7 @@
 .player-container .player {
   margin: 16px;
   display: inline-block;
-  cursor: grab;
+  cursor: pointer;
   border-radius: 50% 50% 5% 5%;
 }
 .player-container .player:hover {
@@ -23,7 +23,7 @@
 }
 .player-container .player.currentlyPlaying {
   opacity: 0.5;
-  cursor: default;
+  cursor: pointer;
   background-color: unset;
 }
 .player-container .player .player-avatar {
@@ -93,5 +93,7 @@
 .games-container .game .game-player .game-loser-name {
   display: inline-block;
 }
-
+.admin-panel {
+  margin: 10px;
+}
 /*# sourceMappingURL=main.css.map */

@@ -14,14 +14,14 @@
     .player {
         margin: 16px;
         display: inline-block;
-        cursor: grab;
+        cursor: pointer;
         border-radius: 50% 50% 5% 5%;
         &:hover {
             background-color: #dbdbdb;
         }
         &.currentlyPlaying {
             opacity: 0.5;
-            cursor: default;
+            cursor: pointer;
             background-color: unset;
         }
         .player-avatar {

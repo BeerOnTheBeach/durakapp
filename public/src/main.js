@@ -143,15 +143,15 @@ const app = new Vue({
                         }
                     })
                 }
-                //enable swipe-down-reload for android-chrome
-                document.getElementsByTagName('body')[0].classList.remove("anti-reload")
-                document.getElementsByTagName('html')[0].classList.remove("anti-reload")
-                document.getElementsByTagName('body')[0].classList.remove("anti-scroll")
-                document.getElementsByTagName('html')[0].classList.remove("anti-scroll")
                 playerAvatar.style.position = "unset";
                 playerAvatar.style.left = "unset";
                 playerAvatar.style.top = "unset";
             }
+            //enable swipe-down-reload for android-chrome
+            document.getElementsByTagName('body')[0].classList.remove("anti-reload")
+            document.getElementsByTagName('html')[0].classList.remove("anti-reload")
+            document.getElementsByTagName('body')[0].classList.remove("anti-scroll")
+            document.getElementsByTagName('html')[0].classList.remove("anti-scroll")
         },
         wasDroppedOn(elementPositionX, elementPositionY, rect) {
             if ((elementPositionX >= rect.x && elementPositionX <= rect.x + rect.width)
@@ -271,7 +271,7 @@ const app = new Vue({
             let lastGame = app.games[app.games.length - 1];
             let lastGameDate = Math.round(new Date(Date.parse(lastGame.modified)).getTime() / 1000)
             let currentDate = Math.round(new Date().getTime() / 1000);
-            if ((currentDate - lastGameDate) / 24 / 60 / 60 >= 1) {
+            if ((currentDate - lastGameDate) / 8 / 60 / 60 >= 1) {
                 axios.post('./api/settings/update.php', {
                     id: ++this.settings.id
                 })

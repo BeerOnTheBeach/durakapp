@@ -83,6 +83,11 @@
             </div>
         </template>
     </div>
+    <div class="admin-panel">
+        <a class="btn btn-warning" href="sites/edit/edit.php">Admin-Panel</a>
+        <a class="btn btn-success" href="sites/import/upload.php">Import CSV</a>
+        <a class="btn btn-primary" href="sites/dashboard/dashboard.php">Dashboard</a>
+    </div>
 </div>
 <script src="./src/main.js"></script>
 </body>
